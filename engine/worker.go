@@ -8,13 +8,12 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func Worker(ctx context.Context, id int, url string, results chan<- metrics.Result) {
+func Worker(ctx context.Context, id int, url string, rl *RateLimiter, results chan<- metrics.Result) {
 	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
 	if err != nil {
 		results <- metrics.Result{Err: err}
 		return
 	}
-
 	defer conn.Close()
 
 	go func() {
@@ -23,6 +22,13 @@ func Worker(ctx context.Context, id int, url string, results chan<- metrics.Resu
 	}()
 
 	for {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
+		rl.Wait(ctx)
 		select {
 		case <-ctx.Done():
 			return
