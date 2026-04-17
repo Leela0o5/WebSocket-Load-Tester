@@ -17,7 +17,7 @@ func Run(cfg config.Config) *metrics.Stats {
 	}
 	rl := NewRateLimiter(ctx, rate)
 
-	stats := &metrics.Stats{}
+	stats := metrics.NewStats()
 	results := make(chan metrics.Result, cfg.NumWorkers*10)
 
 	done := make(chan bool)
@@ -28,7 +28,7 @@ func Run(cfg config.Config) *metrics.Stats {
 				stats.FailureCount++
 			} else {
 				stats.SuccessCount++
-				stats.Latencies = append(stats.Latencies, res.Latency)
+				stats.Record(res.Latency) 
 			}
 		}
 		done <- true

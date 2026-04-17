@@ -1,12 +1,7 @@
 package metrics
-import (
-	"time"
-)
 
 func Collector(results <-chan Result) Stats {
-	s := Stats{
-		Latencies: make([]time.Duration, 0),
-	}
+	s := NewStats()
 
 	for res := range results {
 		s.TotalRequests++
@@ -17,8 +12,8 @@ func Collector(results <-chan Result) Stats {
 		}
 
 		s.SuccessCount++
-		s.Latencies = append(s.Latencies, res.Latency)
+		s.Record(res.Latency) 
 	}
 
-	return s
+	return *s
 }
