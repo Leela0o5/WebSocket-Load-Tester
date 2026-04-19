@@ -8,6 +8,7 @@ import (
 type RateLimiter struct {
 	tokens chan struct{}
 }
+
 func NewRateLimiter(ctx context.Context, rate, burst int) *RateLimiter {
 	if burst <= 0 {
 		burst = rate
@@ -39,7 +40,7 @@ func NewRateLimiter(ctx context.Context, rate, burst int) *RateLimiter {
 					select {
 					case rl.tokens <- struct{}{}:
 					default:
-						goto nextTick 
+						goto nextTick
 					}
 				}
 			nextTick:

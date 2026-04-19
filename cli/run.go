@@ -89,4 +89,3 @@ func init() {
 	runCmd.Flags().Int("burst", 0, "Burst size")
 	runCmd.Flags().String("message", "", "Message to send")
 }
-

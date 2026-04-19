@@ -27,7 +27,7 @@ var defaults = Config{
 }
 
 func LoadConfig(path string) (*Config, error) {
-	cfg := defaults 
+	cfg := defaults
 
 	if path == "" {
 		return &cfg, nil
@@ -40,7 +40,7 @@ func LoadConfig(path string) (*Config, error) {
 	defer f.Close()
 
 	dec := yaml.NewDecoder(f)
-	dec.KnownFields(true) 
+	dec.KnownFields(true)
 
 	if err := dec.Decode(&cfg); err != nil {
 		return nil, fmt.Errorf("config: failed to parse %q: %w", path, err)

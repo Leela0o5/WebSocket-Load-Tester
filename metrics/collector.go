@@ -12,7 +12,7 @@ func Collector(results <-chan Result) Stats {
 		}
 
 		s.SuccessCount++
-		s.Record(res.Latency) 
+		s.Record(res.Latency)
 	}
 
 	return *s

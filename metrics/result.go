@@ -5,8 +5,8 @@ import (
 )
 
 type Result struct {
-	Latency time.Duration
-	Success bool
+	Latency   time.Duration
+	Success   bool
 	Timestamp time.Time
-	Err error
+	Err       error
 }

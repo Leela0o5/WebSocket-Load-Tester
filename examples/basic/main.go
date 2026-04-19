@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Leela0o5/LeeGo" 
+	"github.com/Leela0o5/LeeGo"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 	}
 
 	fmt.Println("Starting load test...")
-	
+
 	stats := leego.Run(cfg)
 
 	fmt.Printf("Test Completed!\n")

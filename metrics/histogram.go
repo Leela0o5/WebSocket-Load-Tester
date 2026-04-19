@@ -25,11 +25,11 @@ var bucketBounds = []time.Duration{
 }
 
 type Histogram struct {
-	counts  [17]uint64    
-	total   uint64        
-	sum     time.Duration 
-	min     time.Duration 
-	max     time.Duration 
+	counts [17]uint64
+	total  uint64
+	sum    time.Duration
+	min    time.Duration
+	max    time.Duration
 }
 
 func NewHistogram() *Histogram {

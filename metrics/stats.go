@@ -9,8 +9,8 @@ type Stats struct {
 	TotalRequests int
 	SuccessCount  int
 	FailureCount  int
-	Latencies     []time.Duration 
-	Hist          *Histogram     
+	Latencies     []time.Duration
+	Hist          *Histogram
 }
 
 func NewStats() *Stats {
@@ -24,7 +24,6 @@ func (s *Stats) Record(d time.Duration) {
 	s.Latencies = append(s.Latencies, d)
 	s.Hist.Record(d)
 }
-
 
 func (s *Stats) Average() time.Duration {
 	if s.Hist != nil && s.Hist.Count() > 0 {
@@ -47,9 +46,9 @@ func (s *Stats) Max() time.Duration {
 	return s.sliceMax()
 }
 
-func (s *Stats) Median() time.Duration  { return s.Percentile(0.50) }
-func (s *Stats) P95() time.Duration     { return s.Percentile(0.95) }
-func (s *Stats) P99() time.Duration     { return s.Percentile(0.99) }
+func (s *Stats) Median() time.Duration { return s.Percentile(0.50) }
+func (s *Stats) P95() time.Duration    { return s.Percentile(0.95) }
+func (s *Stats) P99() time.Duration    { return s.Percentile(0.99) }
 
 func (s *Stats) Percentile(p float64) time.Duration {
 	if s.Hist != nil && s.Hist.Count() > 0 {
