@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/Leela0o5/WebSocket-Load-Tester/config"
-	"github.com/Leela0o5/WebSocket-Load-Tester/metrics"
+	"github.com/Leela0o5/LeeGo/config"
+	"github.com/Leela0o5/LeeGo/metrics"
 )
 
 func Run(cfg config.Config) *metrics.Stats {
@@ -54,8 +54,17 @@ func RunAsync(cfg config.Config) (*metrics.Stats, chan struct{}) {
 			}()
 		}
 
-		<-ctx.Done()
-		wg.Wait()
+		workersDone := make(chan struct{})
+		go func() {
+			wg.Wait()
+			close(workersDone)
+		}()
+
+		select {
+		case <-ctx.Done():
+			wg.Wait()
+		case <-workersDone:
+		}
 		close(results)
 		<-collectorDone
 		close(done)

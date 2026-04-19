@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Leela0o5/WebSocket-Load-Tester/metrics"
+	"github.com/Leela0o5/LeeGo/metrics"
 )
 
 type JSONReport struct {

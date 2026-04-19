@@ -1,0 +1,46 @@
+name: Multi-OS Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+          - os: windows
+            arch: amd64
+            ext: .exe
+          - os: darwin
+            arch: amd64
+          - os: darwin
+            arch: arm64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build Binary
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+        run: go build -v -o leego-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.ext }} ./cmd/leego/main.go
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: leego-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.ext }}

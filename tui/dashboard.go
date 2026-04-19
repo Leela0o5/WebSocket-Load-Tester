@@ -8,8 +8,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/Leela0o5/WebSocket-Load-Tester/config"
-	"github.com/Leela0o5/WebSocket-Load-Tester/metrics"
+	"github.com/Leela0o5/LeeGo/config"
+	"github.com/Leela0o5/LeeGo/metrics"
 )
 
 type tickMsg time.Time

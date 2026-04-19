@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/Leela0o5/WebSocket-Load-Tester/reporter"
+	"github.com/Leela0o5/LeeGo/reporter"
 	"github.com/spf13/cobra"
 )
 

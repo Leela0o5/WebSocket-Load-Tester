@@ -2,7 +2,7 @@ package reporter
 
 import (
 	"fmt"
-	"github.com/Leela0o5/WebSocket-Load-Tester/metrics"
+	"github.com/Leela0o5/LeeGo/metrics"
 )
 
 func PrintSummary(s *metrics.Stats) {

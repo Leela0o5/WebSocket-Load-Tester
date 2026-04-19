@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Leela0o5/WebSocket-Load-Tester/config"
-	"github.com/Leela0o5/WebSocket-Load-Tester/engine"
+	"github.com/Leela0o5/LeeGo/config"
+	"github.com/Leela0o5/LeeGo/engine"
 	"github.com/gorilla/websocket"
 )
 

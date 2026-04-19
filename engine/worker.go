@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Leela0o5/WebSocket-Load-Tester/metrics"
+	"github.com/Leela0o5/LeeGo/metrics"
 	"github.com/gorilla/websocket"
 )
 
@@ -16,9 +16,16 @@ func Worker(ctx context.Context, id int, url string, message string, rl *RateLim
 	}
 	defer conn.Close()
 
+	doneCh := make(chan struct{})
+	defer close(doneCh)
+
 	go func() {
-		<-ctx.Done()
-		conn.Close()
+		select {
+		case <-ctx.Done():
+			conn.Close()
+		case <-doneCh:
+			return
+		}
 	}()
 
 	for {

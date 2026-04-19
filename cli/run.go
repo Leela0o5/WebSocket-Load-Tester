@@ -7,10 +7,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
-	"github.com/Leela0o5/WebSocket-Load-Tester/config"
-	"github.com/Leela0o5/WebSocket-Load-Tester/engine"
-	"github.com/Leela0o5/WebSocket-Load-Tester/reporter"
-	"github.com/Leela0o5/WebSocket-Load-Tester/tui"
+	"github.com/Leela0o5/LeeGo/config"
+	"github.com/Leela0o5/LeeGo/engine"
+	"github.com/Leela0o5/LeeGo/reporter"
+	"github.com/Leela0o5/LeeGo/tui"
 )
 
 var (
@@ -33,6 +33,25 @@ var runCmd = &cobra.Command{
 		cfg, err := config.LoadConfig(path)
 		if err != nil {
 			return fmt.Errorf("load config: %w", err)
+		}
+
+		if cmd.Flags().Changed("url") {
+			cfg.URL, _ = cmd.Flags().GetString("url")
+		}
+		if cmd.Flags().Changed("connections") {
+			cfg.NumWorkers, _ = cmd.Flags().GetInt("connections")
+		}
+		if cmd.Flags().Changed("duration") {
+			cfg.Duration, _ = cmd.Flags().GetDuration("duration")
+		}
+		if cmd.Flags().Changed("rate") {
+			cfg.RateLimit, _ = cmd.Flags().GetInt("rate")
+		}
+		if cmd.Flags().Changed("burst") {
+			cfg.Burst, _ = cmd.Flags().GetInt("burst")
+		}
+		if cmd.Flags().Changed("message") {
+			cfg.Message, _ = cmd.Flags().GetString("message")
 		}
 
 		stats, done := engine.RunAsync(*cfg)
@@ -62,5 +81,12 @@ func init() {
 
 	runCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "path to YAML config file")
 	runCmd.Flags().StringVarP(&outputPath, "output", "o", "", "path to save JSON report")
+
+	runCmd.Flags().String("url", "", "WebSocket connection URL")
+	runCmd.Flags().Int("connections", 0, "Number of concurrent workers")
+	runCmd.Flags().Duration("duration", 0, "Test duration (e.g., 10s, 1m)")
+	runCmd.Flags().Int("rate", 0, "Rate limit per second")
+	runCmd.Flags().Int("burst", 0, "Burst size")
+	runCmd.Flags().String("message", "", "Message to send")
 }
 

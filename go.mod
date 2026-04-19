@@ -1,4 +1,4 @@
-module github.com/Leela0o5/WebSocket-Load-Tester
+module github.com/Leela0o5/LeeGo
 
 go 1.25.7
 

@@ -1,59 +1,98 @@
-# WebSocket Load Tester
+# LeeGo: High-Performance WebSocket Load Tester
 
-This is Version 1 of my project. It is a fast tool to test how many messages a WebSocket server can handle. It uses Go's parallel workers to send many messages at once.
+[![Go Reference](https://pkg.go.dev/badge/github.com/Leela0o5/LeeGo.svg)](https://pkg.go.dev/github.com/Leela0o5/LeeGo)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Leela0o5/LeeGo)](https://goreportcard.com/report/github.com/Leela0o5/LeeGo)
 
-## Performance
-- 60,000+ requests per second.
-- Very low latency tracking.
+LeeGo is a fast WebSocket load testing tool built in Go. It helps you measure how your servers handle concurrent WebSocket connections and tracks latency without tanking your system's memory.
 
-## How to run
-1. Start the test server in one terminal:
-   go run cmd/test_server.go
-2. Start the load tester in another terminal:
-   go run main.go
+## Features
 
-## Project Roadmap
+- **Real Concurrency:** Uses goroutines to keep thousands of connections open and active at the same time.
+- **Efficient Latency Tracking:** Uses a custom histogram bucket architecture to track P50, P95, and P99 latencies accurately without massive Garbage Collection pauses.
+- **Token-Bucket Rate Limiting:** Set exact requests-per-second limits so you can find the breaking point of your servers smoothly.
+- **CLI or Library:** Run it from the terminal for a nice TUI, or just import `leego` directly into your own Go codebase.
 
-### Version 1 — Core Load Engine (Done)
-**What it does:** Simulates many WebSocket clients at once to measure server performance under heavy load.
+## Installation
 
-**Features:**
-- Parallel workers using Go routines
-- Each worker keeps its own connection open
-- Fast loop for sending and receiving messages
-- Results gathered through channels
-- Measures average and p95 latency
-- Tracks errors and shuts down safely
-- Very high speed (60k+ requests/sec)
+### As a CLI Tool
 
-### Version 2 — Control & Accuracy (Next)
-**What it does:** Adds control over the speed of the test and makes it more accurate.
+Install the standalone executable onto your machine:
+```bash
+go install github.com/Leela0o5/LeeGo/cmd/leego@latest
+```
 
-**Features:**
-- Rate limiting (control requests per second)
-- Config file support (YAML)
-- Settings for connections, time, and speed
-- Better math for percentiles
-- Support for custom messages
+### As a Go Library
 
-### Version 3 — CLI & Developer Experience
-**What it does:** Turns the tool into a professional CLI utility.
+Add it to your project dependencies:
+```bash
+go get github.com/Leela0o5/LeeGo
+```
 
-**Features:**
-- Built with Cobra
-- New commands to run tests or report on past results
-- Export results as JSON
-- Cleaner terminal output
+## Usage
 
-### Version 4 — Visualization & UI
-**What it does:** Shows test results in a visual dashboard.
+### Library Usage
+If you want to automate stress tests from inside your backend or CI, just drop `leego` into your Go code.
 
-**Features:**
-- React-based dashboard
-- Charts for latency and speed over time
-- Error rate tracking
-- Real-time updates (optional)
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+
+    "github.com/Leela0o5/LeeGo" // imported as leego
+)
+
+func main() {
+    cfg := leego.Config{
+        URL:        "ws://localhost:8080/ws",
+        NumWorkers: 50,
+        Duration:   10 * time.Second,
+        RateLimit:  2000,
+        Message:    "ping",
+    }
+
+    stats := leego.Run(cfg)
+
+    fmt.Printf("Total Requests: %d | Approximated P99: %s\n", stats.TotalRequests, stats.P99())
+}
+```
+
+### Command-Line Usage
+
+Run dynamic load tests against your servers straight from the terminal. 
+
+```bash
+# Basic run parameters
+leego run --url ws://localhost:8080/ws --connections 100 --duration 10s --rate 5000
+
+# Run using a configuration file and save a report
+leego run -c config.yaml -o results.json
+```
+
+**Available Flags:**
+- `--url` (string): WebSocket connection URL to target.
+- `--connections` (int): Number of concurrent workers (simulated clients).
+- `--duration` (duration): Total test duration (e.g., `10s`, `1m`).
+- `--rate` (int): Rate limit per second (total requests across all connections).
+- `--burst` (int): Burst size limit.
+- `--message` (string): Plaintext or JSON payload message to send.
+- `-c, --config` (string): Path to a YAML configuration file.
+- `-o, --output` (string): Path to save a structured JSON report.
+
+#### Configuration File Example
+```yaml
+url: "ws://localhost:8080/ws"
+connections: 50
+duration: "30s"
+rate: 2000
+burst: 1000
+message: "{ \"type\": \"ping\" }"
+```
 
 ## Tests
-Run this command to test the code:
-go test ./tests/...
+
+Execute the validation suites:
+```bash
+go test ./...
+```
