@@ -2,7 +2,6 @@ package reporter
 
 import (
 	"fmt"
-	"time"
 	"github.com/Leela0o5/WebSocket-Load-Tester/metrics"
 )
 
@@ -13,7 +12,7 @@ func PrintReport(r *JSONReport) {
 	printData(r.Total, r.Errors, r.AvgLatency, r.P95)
 }
 
-func printData(total, errors int, avg, p95 time.Duration) {
+func printData(total, errors int, avg, p95 any) {
 	fmt.Println("\n--- BENCHMARK SUMMARY ---")
 	fmt.Printf("Total Requests: %d\n", total)
 	fmt.Printf("Errors:         %d\n", errors)
